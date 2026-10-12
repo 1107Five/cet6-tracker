@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>六级备考打卡 · 425+ 冲刺计划</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+<style>
+  :root{
+    --indigo:#4f46e5; --indigo-d:#4338ca; --indigo-l:#eef2ff;
+    --ink:#1e293b; --sub:#64748b; --line:#e8ecf4;
+    --bg:#f4f6fc; --card:#ffffff;
+    --red:#e11d48; --green:#059669; --purple:#9333ea; --cyan:#0891b2; --amber:#d97706;
+    --shadow:0 10px 30px rgba(30,41,59,.08);
+    --radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;
+    background:
+      radial-gradient(1200px 500px at 80% -10%, #e0e7ff 0%, rgba(224,231,255,0) 60%),
+      var(--bg);
+    color:var(--ink); line-height:1.6; padding-bottom:40px;
+  }
+  .app{max-width:860px;margin:0 auto;padding:0 16px}
+
+  /* ===== HERO ===== */
+  .hero{
+    margin-top:18px; border-radius:26px; padding:28px 26px 24px; color:#fff;
+    background:linear-gradient(135deg,#4338ca 0%,#4f46e5 52%,#6366f1 100%);
+    box-shadow:0 18px 40px rgba(79,70,229,.35); position:relative; overflow:hidden;
+  }
+  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;
+    border-radius:50%;background:rgba(255,255,255,.08)}
+  .hero::before{content:"";position:absolute;right:40px;bottom:-80px;width:180px;height:180px;
+    border-radius:50%;background:rgba(255,255,255,.07)}
+  .hero-badge{display:inline-block;font-size:13px;font-weight:600;letter-spacing:1px;
+    background:rgba(255,255,255,.18);padding:4px 12px;border-radius:999px;margin-bottom:12px}
+  .hero h1{font-size:30px;font-weight:800;letter-spacing:1px}
+  .hero p{opacity:.88;font-size:14px;margin-top:6px}
+  .countdown{display:flex;align-items:baseline;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .countdown .num{font-size:40px;font-weight:800;line-height:1}
+  .countdown .unit{font-size:14px;opacity:.9}
+  .countdown .goal-tag{margin-left:auto;font-size:13px;background:rgba(255,255,255,.16);
+    padding:6px 14px;border-radius:999px;font-weight:600}
+
+  /* ===== TABS ===== */
+  .tabs{position:sticky;top:10px;z-index:20;display:flex;gap:6px;margin:16px 0 14px;
+    background:rgba(255,255,255,.85);backdrop-filter:blur(12px);
+    padding:6px;border-radius:16px;box-shadow:var(--shadow)}
+  .tabs button{flex:1;border:0;background:transparent;font-family:inherit;font-size:14px;
+    font-weight:600;color:var(--sub);padding:10px 4px;border-radius:12px;cursor:pointer;
+    transition:.2s; white-space:nowrap}
+  .tabs button.active{background:var(--indigo);color:#fff;box-shadow:0 6px 14px rgba(79,70,229,.3)}
+
+  section{display:none;animation:fade .25s ease}
+  section.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:20px;margin-bottom:14px}
+  .card h2{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .card h2 .en{font-size:11px;color:var(--sub);font-weight:600;letter-spacing:1px}
+
+  /* ===== TODAY ===== */
+  .day-nav{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .day-nav button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);
+    background:#fff;font-size:20px;color:var(--indigo);cursor:pointer;font-weight:700}
+  .day-nav button:disabled{opacity:.35;cursor:not-allowed}
+  .day-main{text-align:center}
+  .day-main .big{font-size:19px;font-weight:800}
+  .day-main .tags{display:flex;gap:6px;justify-content:center;margin-top:6px;flex-wrap:wrap}
+  .tag{font-size:12px;font-weight:600;padding:2px 10px;border-radius:999px}
+  .tag.indigo{background:var(--indigo-l);color:var(--indigo-d)}
+  .tag.gray{background:#f1f5f9;color:var(--sub)}
+  .tag.amber{background:#fffbeb;color:var(--amber)}
+  .back-today{display:block;margin:10px auto 0;border:0;background:var(--indigo-l);color:var(--indigo-d);
+    font-family:inherit;font-size:13px;font-weight:700;padding:7px 18px;border-radius:999px;cursor:pointer}
+
+  .progress-row{display:flex;align-items:center;gap:18px;margin-top:18px;padding-top:16px;
+    border-top:1px dashed var(--line)}
+  .ring{position:relative;width:76px;height:76px;flex:none}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:17px;font-weight:800;color:var(--indigo-d)}
+  .progress-meta{flex:1}
+  .progress-meta .t{font-size:15px;font-weight:800}
+  .progress-meta .s{font-size:13px;color:var(--sub);margin-top:2px}
+  .bar{height:8px;border-radius:99px;background:#eef2f7;margin-top:10px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#6366f1,#4f46e5);
+    transition:width .4s}
+
+  .full-banner{margin-top:14px;background:linear-gradient(135deg,#ecfdf5,#f0fdf4);
+    border:1px solid #bbf7d0;color:#15803d;border-radius:14px;padding:12px 14px;
+    font-size:14px;font-weight:700;display:none}
+  .full-banner.show{display:block}
+
+  .group-label{display:flex;align-items:center;gap:8px;margin:20px 0 10px;font-size:14px;font-weight:800}
+  .group-label .dot{width:8px;height:8px;border-radius:50%}
+  .group-label.must .dot{background:var(--indigo)}
+  .group-label.opt .dot{background:#a5b4fc}
+  .group-label small{font-weight:600;color:var(--sub);font-size:12px}
+
+  .task{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border:1.5px solid var(--line);
+    border-radius:15px;margin-bottom:9px;cursor:pointer;transition:.18s;background:#fff}
+  .task:hover{border-color:#c7d2fe}
+  .task.done{background:#f8fafc}
+  .checkbox{width:23px;height:23px;border-radius:7px;border:2px solid #c4cad6;flex:none;margin-top:2px;
+    display:flex;align-items:center;justify-content:center;transition:.18s;font-size:14px;color:#fff}
+  .task.done .checkbox{background:var(--indigo);border-color:var(--indigo)}
+  .task.done .checkbox::after{content:"✓";font-weight:900}
+  .task-body{flex:1;min-width:0}
+  .task-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .chip{font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;flex:none}
+  .task-text{font-size:14.5px;font-weight:600}
+  .task.done .task-text{color:#94a3b8;text-decoration:line-through;text-decoration-color:#cbd5e1}
+  .task-sub{font-size:12.5px;color:var(--sub);margin-top:3px}
+  .task.opt{background:#fcfcff;border-style:dashed}
+
+  .note-box{margin-top:16px}
+  .note-box label{font-size:13px;font-weight:700;color:var(--sub);display:block;margin-bottom:6px}
+  .note-box textarea{width:100%;border:1.5px solid var(--line);border-radius:13px;padding:11px 13px;
+    font-family:inherit;font-size:13.5px;resize:vertical;min-height:64px;outline:none}
+  .note-box textarea:focus{border-color:var(--indigo)}
+
+  .tips{background:#fffbeb;border:1px solid #fde68a;border-radius:var(--radius);padding:18px 20px;margin-bottom:14px}
+  .tips h2{color:#92400e;font-size:15px;margin-bottom:10px}
+  .tips li{list-style:none;font-size:13px;color:#78350f;margin-bottom:8px;padding-left:22px;position:relative}
+  .tips li::before{content:"💡";position:absolute;left:0;top:0;font-size:12px}
+  .tips li:last-child{margin-bottom:0}
+
+  /* ===== GOAL ===== */
+  .score-card{display:flex;align-items:center;gap:14px;padding:14px;border-radius:16px;margin-bottom:12px;
+    border:1.5px solid var(--line)}
+  .score-icon{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+    font-size:22px;flex:none}
+  .score-info{flex:1;min-width:0}
+  .score-info .name{font-weight:800;font-size:15px;display:flex;justify-content:space-between}
+  .score-info .name .full{font-size:12px;color:var(--sub);font-weight:600}
+  .score-info .nums{font-size:12.5px;color:var(--sub);margin:3px 0 7px}
+  .score-info .nums b{color:var(--indigo-d);font-size:14px}
+  .scorebar{position:relative;height:10px;background:#eef2f7;border-radius:99px}
+  .scorebar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px}
+  .scorebar .tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--amber);border-radius:2px}
+  .scorebar .tick::after{content:"目标";position:absolute;top:-16px;left:50%;transform:translateX(-50%);
+    font-size:10px;color:var(--amber);font-weight:700;white-space:nowrap}
+
+  .total-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+  .total-grid .box{border-radius:15px;padding:14px 10px;text-align:center}
+  .total-grid .box .v{font-size:24px;font-weight:800;line-height:1.2}
+  .total-grid .box .l{font-size:12px;margin-top:3px;font-weight:600}
+  .box.gray{background:#f1f5f9;color:var(--sub)}
+  .box.amber{background:#fffbeb;color:#92400e}
+  .box.green{background:#ecfdf5;color:#047857}
+  .pass-line{margin-top:12px;text-align:center;font-size:13px;color:var(--sub)}
+  .pass-line b{color:var(--red);font-size:16px}
+
+  /* ===== PLAN ===== */
+  .rules li{list-style:none;display:flex;gap:11px;padding:11px 0;border-bottom:1px dashed var(--line);
+    font-size:13.5px}
+  .rules li:last-child{border-bottom:0}
+  .rules .n{width:24px;height:24px;border-radius:8px;background:var(--indigo-l);color:var(--indigo-d);
+    font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+  .rules b{color:var(--indigo-d)}
+
+  .week-card{border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;margin-bottom:12px;position:relative}
+  .week-card.current{border-color:var(--indigo);box-shadow:0 10px 26px rgba(79,70,229,.15)}
+  .week-card .w-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .week-card .w-no{background:var(--indigo);color:#fff;font-size:12px;font-weight:800;padding:3px 11px;border-radius:999px}
+  .week-card.current .w-no{box-shadow:0 0 0 4px rgba(79,70,229,.12)}
+  .week-card h3{font-size:16px;font-weight:800}
+  .week-card .w-goal{font-size:13px;color:var(--sub);margin-bottom:10px}
+  .week-card .w-goal b{color:var(--ink)}
+  .week-item{display:flex;gap:9px;align-items:flex-start;font-size:13px;padding:5px 0}
+  .week-item .chip{margin-top:2px}
+  .current-flag{position:absolute;top:14px;right:14px;font-size:11px;font-weight:800;color:#fff;
+    background:linear-gradient(90deg,#f59e0b,#f97316);padding:3px 10px;border-radius:999px}
+
+  /* ===== STATS ===== */
+  .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-box{background:#f8fafc;border-radius:15px;padding:15px 14px;text-align:center}
+  .stat-box .v{font-size:27px;font-weight:800;color:var(--indigo-d);line-height:1.2}
+  .stat-box .l{font-size:12.5px;color:var(--sub);margin-top:2px}
+  .cat-stat{margin-top:14px}
+  .cat-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
+  .cat-row .nm{width:52px;font-weight:700;flex:none}
+  .cat-row .bar{flex:1;margin-top:0;height:9px}
+  .cat-row .cnt{width:34px;text-align:right;font-weight:700;color:var(--sub);flex:none}
+
+  .heat-head,.heat-row{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .heat-head{font-size:11px;color:var(--sub);text-align:center;margin-bottom:6px;font-weight:600}
+  .heat-cell{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:10.5px;font-weight:700;background:#eef2f7;color:#94a3b8;position:relative}
+  .heat-cell.partial{background:#c7d2fe;color:#3730a3}
+  .heat-cell.full{background:linear-gradient(135deg,#6366f1,#4338ca);color:#fff}
+  .heat-legend{display:flex;gap:12px;justify-content:flex-end;margin-top:10px;font-size:11.5px;color:var(--sub)}
+  .heat-legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:4px;vertical-align:-2px}
+
+  .settings-row{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:11px 0;border-bottom:1px dashed var(--line);font-size:13.5px;flex-wrap:wrap}
+  .settings-row:last-child{border-bottom:0}
+  .settings-row input[type=date]{border:1.5px solid var(--line);border-radius:10px;padding:6px 10px;
+    font-family:inherit;font-size:13px;color:var(--ink)}
+  .btn{border:0;border-radius:10px;padding:8px 16px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer}
+  .btn.light{background:#f1f5f9;color:var(--ink)}
+  .btn.danger{background:#fef2f2;color:#dc2626}
+  .data-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .hint{font-size:12px;color:var(--sub);margin-top:8px}
+
+  footer{text-align:center;color:#94a3b8;font-size:12px;margin-top:18px}
+
+  @media (max-width:560px){
+    .hero{padding:22px 20px 20px;border-radius:22px}
+    .hero h1{font-size:25px}
+    .countdown .num{font-size:34px}
+    .tabs button{font-size:12.5px;padding:9px 2px}
+    .total-grid .box .v{font-size:20px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="hero">
+    <span class="hero-badge">CET-6 · 总分 710 · 目标 425+</span>
+    <h1>六级备考打卡</h1>
+    <p>第 1–4 周计划 · 精听为主 · 阅读提分 · 写译稳步保底</p>
+    <div class="countdown">
+      <span class="num" id="cdNum">—</span><span class="unit">天</span>
+      <span style="opacity:.85;font-size:14px">距离六级考试</span>
+      <span class="goal-tag" id="cdWeek">第 — 周</span>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="today" class="active">📅 今日打卡</button>
+    <button data-tab="goal">🎯 分数目标</button>
+    <button data-tab="plan">🗓 四周计划</button>
+    <button data-tab="stats">📊 学习统计</button>
+  </nav>
+
+  <!-- ============ 今日打卡 ============ -->
+  <section id="tab-today" class="show"></section>
+
+  <!-- ============ 分数目标 ============ -->
+  <section id="tab-goal"></section>
+
+  <!-- ============ 四周计划 ============ -->
+  <section id="tab-plan"></section>
+
+  <!-- ============ 学习统计 ============ -->
+  <section id="tab-stats"></section>
+
+  <footer>数据仅保存在本浏览器 · 建议每周在「学习统计」中导出备份</footer>
+</div>
+
+<script>
+/* ================= 数据：每日任务 ================= */
+const CATS = {
+  word:   {name:'单词', icon:'🔤', color:'#e11d48', bg:'#fff1f2'},
+  listen: {name:'听力', icon:'🎧', color:'#4f46e5', bg:'#eef2ff'},
+  read:   {name:'阅读', icon:'📖', color:'#059669', bg:'#ecfdf5'},
+  trans:  {name:'翻译', icon:'✍️', color:'#9333ea', bg:'#faf5ff'},
+  exam:   {name:'真题', icon:'📝', color:'#0891b2', bg:'#ecfeff'},
+  review: {name:'复盘', icon:'🔁', color:'#d97706', bg:'#fffbeb'}
+};
+/* 索引 0=周一 … 6=周日 */
+const DAY_META = [
+  {name:'周一', tag:'课最多 · 减负日'},
+  {name:'周二', tag:'课最多 · 减负日'},
+  {name:'周三', tag:'课最多 · 减负日'},
+  {name:'周四', tag:'课适中 · 刷题日 A'},
+  {name:'周五', tag:'课适中 · 刷题日 B'},
+  {name:'周六', tag:'全天无课 · 黄金强化日'},
+  {name:'周日', tag:'白天实训 · 仅晚间学习'}
+];
+const TASKS = [
+  { must:[
+      {cat:'word', text:'新词 30 个 + 复习旧词', sub:'优先六级高频核心词，课间碎片时间完成'},
+      {cat:'listen', text:'精听 1 段讲座 · 10–15 分钟', sub:'逐句暂停抓主干，训练专注力，解决走神'},
+      {cat:'review', text:'回看前一天阅读错题', sub:'拆解长难句'}
+    ],
+    opt:[
+      {cat:'listen', text:'泛听真题音频 20 分钟'},
+      {cat:'trans', text:'看 2 句翻译例句，积累短语'}
+    ]},
+  { must:[
+      {cat:'word', text:'新词 30 个 + 复习旧词'},
+      {cat:'listen', text:'精听 1 段长对话 · 10–15 分钟', sub:'练习抓取题干关键词'},
+      {cat:'read', text:'2 篇仔细阅读 · 限时训练'}
+    ],
+    opt:[
+      {cat:'trans', text:'翻看翻译词汇，仿写简单短句'}
+    ]},
+  { must:[
+      {cat:'word', text:'新词 30 个 + 复习旧词'},
+      {cat:'listen', text:'精听 1 篇短文 · 15 分钟'},
+      {cat:'review', text:'整理本周听力错题', sub:'总结高频错误类型'}
+    ],
+    opt:[
+      {cat:'listen', text:'泛听真题音频 20 分钟磨耳朵'}
+    ]},
+  { must:[
+      {cat:'word', text:'新词 30 个 + 复习旧词'},
+      {cat:'exam', text:'限时完成真题（不含作文）', sub:'听力 + 阅读 + 翻译'},
+      {cat:'review', text:'立刻复盘整套试卷', sub:'标记生词、错题原因'}
+    ],
+    opt:[
+      {cat:'trans', text:'精读翻译参考译文，摘抄 3 个实用句式'}
+    ]},
+  { must:[
+      {cat:'word', text:'新词 30 个 + 复习旧词'},
+      {cat:'exam', text:'限时完成真题（不含作文）', sub:'听力 + 阅读 + 翻译'},
+      {cat:'review', text:'复盘整套卷子', sub:'整理阅读错题本'}
+    ],
+    opt:[
+      {cat:'listen', text:'精听本套听力原文，跟读'}
+    ]},
+  { must:[
+      {cat:'word', text:'新词 30 个 + 复习本周所有单词', sub:'重点攻克遗忘词汇'},
+      {cat:'listen', text:'听力专项：精听 1 篇长讲座 · 20 分钟', sub:'刻意训练长时间专注，对抗走神'},
+      {cat:'read', text:'阅读专项：选词填空 + 长篇阅读各 2 篇', sub:'限时训练，主攻薄弱板块'}
+    ],
+    opt:[
+      {cat:'trans', text:'完整做 1 段短篇翻译，对照译文修改'},
+      {cat:'listen', text:'泛听真题音频 30 分钟'}
+    ]},
+  { must:[
+      {cat:'word', text:'复习本周单词，查漏补缺'},
+      {cat:'listen', text:'精听 1 段对话 · 10–15 分钟'}
+    ],
+    opt:[
+      {cat:'review', text:'翻看本周全部错题，快速过一遍'}
+    ]}
+];
+
+/* ================= 数据：分数目标 / 周计划 / 提醒 ================= */
+const SCORES = [
+  {name:'听力', full:248.5, cur:148, target:160, floor:150, cat:'listen'},
+  {name:'阅读', full:248.5, cur:163, target:180, floor:170, cat:'read'},
+  {name:'写译', full:213,   cur:136, target:145, floor:130, cat:'trans'}
+];
+const RULES = [
+  {h:'单词', t:'每日新词 <b>30 个 + 复习旧词</b>，优先六级高频核心词，碎片时间刷词'},
+  {h:'听力', t:'主攻「语速快、注意力涣散」，<b>精听为主，泛听为辅</b>'},
+  {h:'阅读', t:'找回做题手感、稳定正确率，<b>两天一套真题</b>（不含作文）'},
+  {h:'翻译', t:'前期少量积累句式，<b>第 4 周开始完整短篇翻译</b>；写作放第 2 个月重点突破'},
+  {h:'复盘', t:'刷题当天完成错题整理，<b>标记生词、长难句</b>'}
+];
+const WEEKS = [
+  {no:'第 1 周', title:'找回手感，适应节奏', goal:'熟悉六级题型，适应听力语速；阅读重建做题习惯',
+   items:[
+     {cat:'listen', t:'不追求正确率，重点练习集中注意力'},
+     {cat:'read',   t:'主攻仔细阅读，学会原文定位；选词填空简单练习'},
+     {cat:'trans',  t:'只积累词汇短句，不写完整翻译'},
+     {cat:'review', t:'熟悉试卷，找到自己最容易丢分的地方'}
+   ]},
+  {no:'第 2 周', title:'强化听力，稳定阅读', goal:'听力减少走神；阅读控制做题时间，缩小分数波动',
+   items:[
+     {cat:'listen', t:'精听训练，逐句拆解，适应更快语速'},
+     {cat:'read',   t:'保持仔细阅读，增加长篇阅读训练'},
+     {cat:'trans',  t:'尝试写简单句子，对照译文修改语法错误'}
+   ]},
+  {no:'第 3 周', title:'专项突破，补齐短板', goal:'针对性攻克错题，稳住阅读分数，听力稳步提分',
+   items:[
+     {cat:'listen', t:'精听 + 泛听结合，重点攻克讲座类题型'},
+     {cat:'read',   t:'重点训练选词填空（最容易丢分），减少失误'},
+     {cat:'trans',  t:'练习完整短篇翻译，积累固定表达'}
+   ]},
+  {no:'第 4 周', title:'整套模拟，检验成果', goal:'模拟考场状态，检验前一个月的学习效果',
+   items:[
+     {cat:'listen', t:'整套听力限时训练，模拟考场环境'},
+     {cat:'read',   t:'整套阅读限时巩固，不刷新难题'},
+     {cat:'trans',  t:'完整翻译练习，总结常犯的语法、用词错误'},
+     {cat:'review', t:'汇总 4 周所有错题，标记重点薄弱点，为第 2 个月冲刺做准备'}
+   ]}
+];
+const TIPS = [
+  '专业课作业多的日子，只保【必须完成】，学有余力任务直接跳过，<b>不要熬夜透支</b>',
+  '听力精听优先，不要直接看答案；反复听，听不懂再看原文',
+  '阅读先看题干再回原文定位，不要逐字全文翻译，节省时间',
+  '翻译前期不求华丽句式，优先保证语法正确、句子通顺'
+];
+
+/* ================= 状态与本地存储 ================= */
+const KEY = 'cet6_checkin_v1';
+const DEFAULT_STATE = {examDate:'2026-12-12', startDate:'2026-10-12', days:{}};
+let state = load();
+let viewDate = todayKey();
+
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if(s && typeof s === 'object' && s.days) return Object.assign({...DEFAULT_STATE}, s);
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+/* ================= 日期工具 ================= */
+function pad(n){ return String(n).padStart(2,'0'); }
+function dkey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function parseKey(k){ const a=k.split('-').map(Number); return new Date(a[0],a[1]-1,a[2]); }
+function todayKey(){ return dkey(new Date()); }
+function widxOf(k){ return (parseKey(k).getDay()+6)%7; }            /* 周一=0 */
+function shiftKey(k,n){ const d=parseKey(k); d.setDate(d.getDate()+n); return dkey(d); }
+function weekOf(k){
+  const diff = Math.round((parseKey(k)-parseKey(state.startDate))/86400000);
+  return Math.floor(diff/7)+1;
+}
+function weekLabel(k){
+  const w = weekOf(k);
+  if(w<1) return '计划未开始';
+  if(w<=4) return '第 '+w+' 周';
+  return '第 2 个月 · 冲刺';
+}
+function recOf(k){ return state.days[k] || (state.days[k]={t:{}, note:''}); }
+function isDone(k,id){ return !!(state.days[k] && state.days[k].t && state.days[k].t[id]); }
+function dayDoneCount(k){
+  const meta = TASKS[widxOf(k)];
+  let m=0,o=0;
+  meta.must.forEach((_,i)=>{ if(isDone(k,'m-'+i)) m++; });
+  meta.opt.forEach((_,i)=>{ if(isDone(k,'o-'+i)) o++; });
+  return {m,o,M:meta.must.length,O:meta.opt.length};
+}
+function isFull(k){ const c=dayDoneCount(k); return c.M>0 && c.m===c.M; }
+function hasAny(k){ const c=dayDoneCount(k); return c.m+c.o>0; }
+
+/* ================= Tab 切换 ================= */
+const tabs = document.getElementById('tabs');
+tabs.addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-tab]');
+  if(!btn) return;
+  tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('active', b===btn));
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('show', s.id==='tab-'+btn.dataset.tab));
+  if(btn.dataset.tab==='stats') renderStats();
+});
+
+/* ================= 今日打卡 ================= */
+const secToday = document.getElementById('tab-today');
+
+function chip(cat){
+  const c = CATS[cat];
+  return '<span class="chip" style="background:'+c.bg+';color:'+c.color+'">'+c.icon+' '+c.name+'</span>';
+}
+function taskHTML(k, group, list){
+  const prefix = group==='must' ? 'm' : 'o';
+  return list.map((task,i)=>{
+    const id = prefix+'-'+i, done = isDone(k,id);
+    return '<label class="task '+(group==='opt'?'opt ':'')+(done?'done':'')+'">'
+      + '<input type="checkbox" class="task-check" data-id="'+id+'" '+(done?'checked':'')
+      + ' style="position:absolute;opacity:0;pointer-events:none">'
+      + '<span class="checkbox"></span>'
+      + '<span class="task-body"><span class="task-line">'
+      +   chip(task.cat)
+      +   '<span class="task-text">'+task.text+'</span>'
+      + '</span>'
+      + (task.sub ? '<div class="task-sub">'+task.sub+'</div>' : '')
+      + '</span></label>';
+  }).join('');
+}
+
+function renderToday(){
+  const k = viewDate, wi = widxOf(k), meta = DAY_META[wi], tasks = TASKS[wi];
+  const c = dayDoneCount(k);
+  const pct  = c.M ? Math.round(c.m/c.M*100) : 0;
+  const pctAll = (c.M+c.O) ? Math.round((c.m+c.o)/(c.M+c.O)*100) : 0;
+  const R = 26, C = 2*Math.PI*R;
+  const isToday = k===todayKey(), isPast = k<todayKey();
+  let rel = '';
+  if(k===todayKey()) rel='今天';
+  else if(k===shiftKey(todayKey(),-1)) rel='昨天';
+  else if(k===shiftKey(todayKey(),1)) rel='明天';
+  const d = parseKey(k);
+
+  secToday.innerHTML =
+    '<div class="card">'
+    + '<div class="day-nav">'
+    +   '<button id="prevDay" aria-label="前一天">‹</button>'
+    +   '<div class="day-main"><div class="big">'+(d.getMonth()+1)+'月'+d.getDate()+'日 · '+meta.name
+    +     (rel?' <span style="font-size:13px;color:var(--indigo)">（'+rel+'）</span>':'')+'</div>'
+    +     '<div class="tags"><span class="tag indigo">'+weekLabel(k)+'</span>'
+    +     '<span class="tag '+(wi<=2?'gray':wi===5?'amber':'indigo')+'">'+meta.tag+'</span></div></div>'
+    +   '<button id="nextDay" '+(k>=todayKey()?'disabled':'')+' aria-label="后一天">›</button>'
+    + '</div>'
+    + (isToday ? '' : '<button class="back-today" id="backToday">回到今天</button>')
+    + '<div class="progress-row">'
+    +   '<div class="ring"><svg width="76" height="76">'
+    +     '<circle cx="38" cy="38" r="'+R+'" fill="none" stroke="#eef2f7" stroke-width="8"/>'
+    +     '<circle cx="38" cy="38" r="'+R+'" fill="none" stroke="#4f46e5" stroke-width="8" stroke-linecap="round"'
+    +       ' stroke-dasharray="'+C+'" stroke-dashoffset="'+(C*(1-pct/100))+'"/></svg>'
+    +     '<span class="val">'+pct+'%</span></div>'
+    +   '<div class="progress-meta">'
+    +     '<div class="t">必做任务 '+c.m+' / '+c.M+'</div>'
+    +     '<div class="s">学有余力 '+c.o+' / '+c.O+' · 总完成 '+pctAll+'%</div>'
+    +     '<div class="bar"><i style="width:'+pctAll+'%"></i></div>'
+    +   '</div>'
+    + '</div>'
+    + '<div class="full-banner '+(c.M>0&&c.m===c.M?'show':'')+'">🎉 今日必做全部完成！'
+    +   (isPast?'':'坚持就是上岸，425+ 稳了。')+'</div>'
+    + '</div>'
+
+    + '<div class="card">'
+    +   '<div class="group-label must"><span class="dot"></span>必须完成 <small>（作业多也至少保住这些）</small></div>'
+    +   taskHTML(k,'must',tasks.must)
+    +   '<div class="group-label opt"><span class="dot"></span>学有余力可做 <small>（做不完不焦虑）</small></div>'
+    +   taskHTML(k,'opt',tasks.opt)
+    +   '<div class="note-box"><label>📝 今日一句话复盘（错题 / 生词 / 状态）</label>'
+    +     '<textarea id="dayNote" placeholder="例如：讲座精听第 2 遍能跟上主干了；选词填空错在词性判断…">'+
+        ((state.days[k]&&state.days[k].note)||'').replace(/</g,'&lt;')+'</textarea></div>'
+    + '</div>'
+
+    + '<div class="tips"><h2>💡 备考小提醒</h2><ul>'
+    + TIPS.map(t=>'<li>'+t+'</li>').join('') + '</ul></div>';
+
+  document.getElementById('prevDay').onclick = ()=>{ viewDate=shiftKey(viewDate,-1); renderToday(); };
+  const nb = document.getElementById('nextDay');
+  if(nb) nb.onclick = ()=>{ viewDate=shiftKey(viewDate,1); renderToday(); };
+  const bt = document.getElementById('backToday');
+  if(bt) bt.onclick = ()=>{ viewDate=todayKey(); renderToday(); };
+}
+secToday.addEventListener('change', e=>{
+  const cb = e.target.closest('.task-check');
+  if(!cb) return;
+  const rec = recOf(viewDate);
+  if(cb.checked) rec.t[cb.dataset.id] = true; else delete rec.t[cb.dataset.id];
+  save(); renderToday();
+});
+secToday.addEventListener('input', e=>{
+  if(e.target.id==='dayNote'){ recOf(viewDate).note = e.target.value; save(); }
+});
+
+/* ================= 分数目标 ================= */
+function renderGoal(){
+  const curTotal = SCORES.reduce((s,x)=>s+x.cur,0);
+  const tgtTotal = SCORES.reduce((s,x)=>s+x.target,0);
+  const flrTotal = SCORES.reduce((s,x)=>s+x.floor,0);
+  document.getElementById('tab-goal').innerHTML =
+    '<div class="card"><h2>🎯 板块提分目标 <span class="en">CURRENT → TARGET</span></h2>'
+    + SCORES.map(s=>{
+        const c = CATS[s.cat];
+        const curPct = (s.cur/s.full*100).toFixed(1);
+        const tgtPct = (s.target/s.full*100).toFixed(1);
+        return '<div class="score-card"><div class="score-icon" style="background:'+c.bg+'">'+c.icon+'</div>'
+          + '<div class="score-info"><div class="name"><span>'+s.name+'</span>'
+          +   '<span class="full">满分 '+s.full+'</span></div>'
+          +   '<div class="nums">现状 <b>'+s.cur+'</b> → 目标 <b>'+s.target+'+</b>'
+          +   ' · 保底 '+s.floor+'</div>'
+          +   '<div class="scorebar"><i style="width:'+curPct+'%;background:'+c.color+'22"></i>'
+          +   '<i style="width:'+curPct+'%;background:'+c.color+';opacity:.92"></i>'
+          +   '<span class="tick" style="left:'+tgtPct+'%"></span></div></div></div>';
+      }).join('')
+    + '</div>'
+    + '<div class="card"><h2>🧮 总分拆解（过线 425）</h2>'
+    +   '<div class="total-grid">'
+    +     '<div class="box gray"><div class="v">'+curTotal+'</div><div class="l">当前估分</div></div>'
+    +     '<div class="box amber"><div class="v">'+flrTotal+'</div><div class="l">保底底线<br>150+170+130</div></div>'
+    +     '<div class="box green"><div class="v">'+tgtTotal+'</div><div class="l">稳妥上岸<br>160+180+145</div></div>'
+    +   '</div>'
+    +   '<div class="pass-line">六级合格线 <b>425</b> 分 · 稳妥目标留有约 60 分安全余量，发挥失常也能过线</div>'
+    + '</div>';
+}
+
+/* ================= 四周计划 ================= */
+function renderPlan(){
+  const cur = weekOf(todayKey());
+  document.getElementById('tab-plan').innerHTML =
+    '<div class="card"><h2>📌 每周总任务（第 1–4 周）</h2><ul class="rules">'
+    + RULES.map((r,i)=>'<li><span class="n">'+(i+1)+'</span><div><b>'+r.h+'：</b>'+r.t+'</div></li>').join('')
+    + '</ul></div>'
+    + WEEKS.map((w,idx)=>
+        '<div class="card week-card'+(idx+1===cur?' current':'')+'">'
+        + (idx+1===cur?'<span class="current-flag">本周</span>':'')
+        + '<div class="w-head"><span class="w-no">'+w.no+'</span><h3>'+w.title+'</h3></div>'
+        + '<div class="w-goal">目标：<b>'+w.goal+'</b></div>'
+        + w.items.map(it=>'<div class="week-item">'+chip(it.cat)+'<span>'+it.t+'</span></div>').join('')
+        + '</div>'
+      ).join('');
+}
+
+/* ================= 学习统计 ================= */
+const secStats = document.getElementById('tab-stats');
+function fullStreak(){
+  let d = new Date();
+  if(!isFull(dkey(d))) d.setDate(d.getDate()-1);
+  let n=0;
+  while(isFull(dkey(d))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function renderStats(){
+  const keys = Object.keys(state.days).filter(hasAny).sort();
+  const studyDays = keys.length;
+  let totalDone = 0;
+  const catCount = {};
+  Object.keys(CATS).forEach(c=>catCount[c]=0);
+  Object.keys(state.days).forEach(k=>{
+    const tasks = TASKS[widxOf(k)];
+    const all = tasks.must.map((t,i)=>({t,id:'m-'+i})).concat(tasks.opt.map((t,i)=>({t,id:'o-'+i})));
+    all.forEach(({t,id})=>{ if(isDone(k,id)){ totalDone++; catCount[t.cat]++; } });
+  });
+
+  /* 本周（按计划开始日对齐的周一）必做完成率 */
+  const monday = shiftKey(todayKey(), -widxOf(todayKey()));
+  let wm=0,wM=0;
+  for(let i=0;i<7;i++){
+    const k = shiftKey(monday,i);
+    if(k<=todayKey()){ const c=dayDoneCount(k); wm+=c.m; wM+=c.M; }
+  }
+
+  /* 热力图：从对齐周一到今天 */
+  const start = shiftKey(todayKey(), -27);
+  const heatStart = shiftKey(start, -widxOf(start));
+  let cells = '';
+  for(let k=heatStart; k<=todayKey(); k=shiftKey(k,1)){
+    const cls = isFull(k)?'full':hasAny(k)?'partial':'';
+    cells += '<div class="heat-cell '+cls+'" title="'+k+'">'+parseKey(k).getDate()+'</div>';
+  }
+  const maxCat = Math.max(1,...Object.values(catCount));
+
+  secStats.innerHTML =
+    '<div class="card"><h2>📊 打卡数据</h2>'
+    + '<div class="stat-grid">'
+    +   '<div class="stat-box"><div class="v">'+fullStreak()+'</div><div class="l">连续满卡（天）</div></div>'
+    +   '<div class="stat-box"><div class="v">'+studyDays+'</div><div class="l">累计学习（天）</div></div>'
+    +   '<div class="stat-box"><div class="v">'+totalDone+'</div><div class="l">完成任务（项）</div></div>'
+    +   '<div class="stat-box"><div class="v">'+(wM?Math.round(wm/wM*100):0)+'%</div><div class="l">本周必做完成率</div></div>'
+    + '</div>'
+    + '<div class="cat-stat">'
+    +   Object.keys(CATS).map(c=>{
+        const x=CATS[c], n=catCount[c];
+        return '<div class="cat-row"><span class="nm">'+x.icon+' '+x.name+'</span>'
+          + '<div class="bar"><i style="width:'+Math.round(n/maxCat*100)+'%;background:'+x.color+'"></i></div>'
+          + '<span class="cnt">'+n+'</span></div>';
+      }).join('')
+    + '</div></div>'
+
+    + '<div class="card"><h2>🔥 近期打卡热力图</h2>'
+    + '<div class="heat-head">'+'一二三四五六日'.split('').map(s=>'<span>'+s+'</span>').join('')+'</div>'
+    + '<div class="heat-row">'+cells+'</div>'
+    + '<div class="heat-legend"><span><i style="background:#eef2f7"></i>未学习</span>'
+    + '<span><i style="background:#c7d2fe"></i>部分完成</span><span><i style="background:#4f46e5"></i>必做全满</span></div>'
+    + '</div>'
+
+    + '<div class="card"><h2>⚙️ 设置与数据</h2>'
+    + '<div class="settings-row"><span>考试日期（倒计时）</span>'
+    +   '<input type="date" id="setExam" value="'+state.examDate+'"></div>'
+    + '<div class="settings-row"><span>第 1 周开始日期（周一）</span>'
+    +   '<input type="date" id="setStart" value="'+state.startDate+'"></div>'
+    + '<div class="settings-row"><span>备份 / 恢复打卡记录</span>'
+    +   '<span class="data-btns"><button class="btn light" id="btnExport">导出数据</button>'
+    +   '<button class="btn light" id="btnImport">导入数据</button></span></div>'
+    + '<div class="settings-row"><span>清空全部记录（不可恢复）</span>'
+    +   '<button class="btn danger" id="btnClear">清空</button></div>'
+    + '<input type="file" id="importFile" accept="application/json" style="display:none">'
+    + '<p class="hint">所有记录仅保存在当前浏览器本地，清除浏览器数据会丢失，建议每周导出一次备份。</p>'
+    + '</div>';
+
+  document.getElementById('setExam').onchange = e=>{ state.examDate=e.target.value; save(); renderHero(); };
+  document.getElementById('setStart').onchange = e=>{ state.startDate=e.target.value; save(); renderHero(); renderToday(); renderPlan(); };
+  document.getElementById('btnExport').onclick = ()=>{
+    const blob = new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '六级打卡数据_'+todayKey()+'.json';
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+  document.getElementById('btnImport').onclick = ()=>document.getElementById('importFile').click();
+  document.getElementById('importFile').onchange = e=>{
+    const f = e.target.files[0]; if(!f) return;
+    const rd = new FileReader();
+    rd.onload = ()=>{
+      try{
+        const s = JSON.parse(rd.result);
+        if(!s.days || typeof s.days!=='object') throw new Error('bad');
+        state = Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), s);
+        save(); renderStats(); renderHero(); renderToday(); renderPlan();
+        alert('导入成功！');
+      }catch(err){ alert('文件格式不正确，导入失败。'); }
+    };
+    rd.readAsText(f);
+  };
+  document.getElementById('btnClear').onclick = ()=>{
+    if(confirm('确定清空所有打卡记录和笔记吗？此操作不可恢复。')){
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      save(); renderStats(); renderToday(); renderHero(); renderPlan();
+    }
+  };
+}
+
+/* ================= 顶部倒计时 ================= */
+function renderHero(){
+  const now = new Date(), exam = parseKey(state.examDate);
+  const days = Math.ceil((exam - new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);
+  document.getElementById('cdNum').textContent = days>=0 ? days : 0;
+  document.getElementById('cdWeek').textContent = weekLabel(todayKey());
+}
+
+/* ================= 初始化 ================= */
+renderHero();
+renderToday();
+renderGoal();
+renderPlan();
+</script>
+</body>
+</html>
